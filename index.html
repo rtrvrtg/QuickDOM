@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+<title>QuickDOM test</title>
+<style>
+
+#happy-sentence {
+  color: #f93;
+}
+
+.emphasis {
+  font-style: italic;
+}
+
+</style>
+<script src="quickdom.js"></script>
+</head>
+<body>
+
+<h1>QuickDOM</h1>
+
+<p>Hello</p>
+<p>How are you</p>
+<p>I am <strong>well</strong> thank you</p>
+<p id="happy-sentence">It is so <em class="emphasis">good</em> to be here!</p>
+
+<button id="get-para">Get paragraphs</button>
+<button id="get-strong">Get strong elements within paragraphs</button>
+<button id="get-emphasis">Get classed element within object with an ID</button>
+<button id="get-error-empty">This causes an error</button>
+<button id="app-new-para">Append new paragraph</button>
+<button id="pre-new-para">Prepend new paragraph</button>
+
+<script>
+
+var AlertConcatText = function( elems )
+{
+	var Text = [];
+    for (var i in elems) {
+      if (elems.hasOwnProperty(i)) {
+        Text.push (elems[i].innerText);
+      }
+    }
+    alert(Text.join("\n"));
+};
+
+var ButtonTests = {
+  'get-para': function()
+  {
+    var Para = QD.get('p');
+    AlertConcatText(Para);
+  },
+  'get-strong': function()
+  {
+    var Strong = QD.get('p strong');
+    AlertConcatText(Strong);
+  },
+  'get-emphasis': function()
+  {
+    var Em = QD.get('#happy-sentence .emphasis');
+    AlertConcatText(Em);
+  },
+  'get-error-empty': function()
+  {
+    var Err = QD.get('');
+    AlertConcatText(Err);
+  },
+  'app-new-para': function()
+  {
+	var Para = QD.create(
+		'p', 
+		{
+			style: {
+				color: '#f00'
+			}
+		}, 
+		[ QD.text('this is a new paragraph') ]
+	);
+	QD.append(Para, QD.get('body', 0));
+  },
+  'pre-new-para': function()
+  {
+	var Para = QD.create(
+		'p', 
+		{
+			style: {
+				color: '#00f'
+			}
+		}, 
+		[ QD.text('this is another! new paragraph') ]
+	);
+	QD.prepend(Para, QD.get('body', 0));
+  }
+};
+
+var Buttons = QD.get('button');
+alert(Buttons.length + ' button/s found.');
+for (var i in Buttons) {
+  if (Buttons.hasOwnProperty(i)) {
+    Buttons[i].onclick = function(){
+    	try {
+    		ButtonTests[ this.id ]();
+    	} catch (ex) {
+    		alert( ex.name + "\n" + ex.message );
+    	}
+    };
+  }
+}
+
+</script>
+
+</body>
+</html>
